@@ -1,0 +1,73 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <div class="user-info">
+      @if (currentUser()) {
+        <span>Welcome, {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      }
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="welcome-card">
+      <h2>Welcome to Admin Panel</h2>
+      <p>You are logged in as an Administrator</p>
+      @if (currentUser()) {
+        <div class="user-details">
+          <p><strong>Username:</strong> {{ currentUser()?.username }}</p>
+          <p><strong>Email:</strong> {{ currentUser()?.email }}</p>
+          <p><strong>Role:</strong> {{ currentUser()?.role }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card clickable" routerLink="/admin/events">
+        <h3>Events</h3>
+        <p class="stat-number">0</p>
+        <p class="stat-link">Manage Events →</p>
+      </div>
+      <div class="stat-card">
+        <h3>Users</h3>
+        <p class="stat-number">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Categories</h3>
+        <p class="stat-number">0</p>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="action-cards">
+        <a class="action-card" routerLink="/admin/events">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <h3>Manage Events</h3>
+          <p>View and manage all events</p>
+        </a>
+        <a class="action-card" routerLink="/admin/events/create">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <h3>Create Event</h3>
+          <p>Add a new event</p>
+        </a>
+        <div class="action-card disabled">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <h3>Manage Users</h3>
+          <p>Coming soon</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

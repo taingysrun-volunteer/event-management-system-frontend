@@ -1,0 +1,132 @@
+<div class="events-container">
+  <header class="events-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+      <h1>Events Management</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-primary" routerLink="/admin/events/create">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Create Event
+      </button>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="events-content">
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading events...</p>
+      </div>
+    } @else if (events().length === 0) {
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <h2>No events yet</h2>
+        <p>Get started by creating your first event</p>
+        <button class="btn-primary" routerLink="/admin/events/create">Create Event</button>
+      </div>
+    } @else {
+      <div class="events-table-container">
+        <table class="events-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Capacity</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of events(); track event.id) {
+              <tr>
+                <td class="event-title">{{ event.title }}</td>
+                <td>{{ event.location }}</td>
+                <td>{{ formatDate(event.eventDate) }}</td>
+                <td>{{ formatTime(event.startTime) }}</td>
+                <td>{{ formatTime(event.endTime) }}</td>
+                <td>
+                  @if (event.capacity) {
+                    <span class="capacity">{{ event.availableSeats || 0 }} / {{ event.capacity }}</span>
+                  } @else {
+                    <span class="capacity-unlimited">Unlimited</span>
+                  }
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(event.status)">
+                    {{ event.status || 'draft' }}
+                  </span>
+                </td>
+                <td class="actions">
+                  <button class="btn-icon btn-view" title="View Details">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                  <button class="btn-icon btn-edit" title="Edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button class="btn-icon btn-delete" (click)="deleteEvent(event.id, event.title)" title="Delete">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button
+            class="btn-page"
+            (click)="previousPage()"
+            [disabled]="currentPage() === 0"
+          >
+            Previous
+          </button>
+          <span class="page-info">
+            Page {{ currentPage() + 1 }} of {{ totalPages() }}
+          </span>
+          <button
+            class="btn-page"
+            (click)="nextPage()"
+            [disabled]="currentPage() >= totalPages() - 1"
+          >
+            Next
+          </button>
+        </div>
+      }
+    }
+  </main>
+</div>
