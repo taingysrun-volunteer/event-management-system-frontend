@@ -1,3 +1,5 @@
+import { Category } from './category.model';
+
 export interface Event {
   id: string;
   title: string;
@@ -8,7 +10,8 @@ export interface Event {
   location: string;
   capacity?: number;
   availableSeats?: number;
-  category?: string;
+  category?: Category;
+  categoryId?: number;
   status?: 'draft' | 'published' | 'cancelled' | 'completed';
   organizerId?: string;
   createdAt?: Date | string;
@@ -26,11 +29,13 @@ export interface EventListResponse {
 export interface CreateEventRequest {
   title: string;
   description: string;
-  startDate: Date | string;
-  endDate: Date | string;
+  eventDate: Date | string;
+  startTime: Date | string;
+  endTime: Date | string;
   location: string;
   capacity?: number;
-  category?: string;
+  categoryId?: number;
+  status?: string;
 }
 
 export interface UpdateEventRequest extends CreateEventRequest {

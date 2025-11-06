@@ -2,8 +2,8 @@
   <header class="dashboard-header">
     <h1>Dashboard</h1>
     <div class="user-info">
-      @if (currentUser()) {
-        <span>Welcome, {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+      @if (currentUser) {
+        <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
         <button class="btn-logout" (click)="logout()">Logout</button>
       }
     </div>
@@ -13,10 +13,10 @@
     <div class="welcome-card">
       <h2>Welcome Back!</h2>
       <p>Manage your events and registrations</p>
-      @if (currentUser()) {
+      @if (currentUser) {
         <div class="user-details">
-          <p><strong>Username:</strong> {{ currentUser()?.username }}</p>
-          <p><strong>Email:</strong> {{ currentUser()?.email }}</p>
+          <p><strong>Username:</strong> {{ currentUser?.username }}</p>
+          <p><strong>Email:</strong> {{ currentUser?.email }}</p>
         </div>
       }
     </div>

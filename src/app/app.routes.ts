@@ -6,12 +6,28 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent)
   },
   {
-    path: 'admin',
-    loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+    path: 'register',
+    loadComponent: () => import('./features/auth/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'admin/events/create',
+    loadComponent: () => import('./features/admin/events/event-create.component').then(m => m.EventCreateComponent)
+  },
+  {
+    path: 'admin/events/edit/:id',
+    loadComponent: () => import('./features/admin/events/event-edit.component').then(m => m.EventEditComponent)
+  },
+  {
+    path: 'admin/events/:id',
+    loadComponent: () => import('./features/admin/events/event-detail.component').then(m => m.EventDetailComponent)
   },
   {
     path: 'admin/events',
     loadComponent: () => import('./features/admin/events/event-list.component').then(m => m.EventListComponent)
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
   },
   {
     path: 'dashboard',

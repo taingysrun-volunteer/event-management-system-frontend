@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginRequest, LoginResponse, User } from '../models/user.model';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, User } from '../models/user.model';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -29,6 +29,10 @@ export class AuthService {
         this.isAuthenticated.set(true);
       })
     );
+  }
+
+  register(userData: RegisterRequest): Observable<RegisterResponse> {
+    return this.apiService.post<RegisterResponse>('/auth/register', userData);
   }
 
   logout(): void {

@@ -19,6 +19,8 @@ export class EventListComponent implements OnInit {
   currentPage = signal(0);
   totalPages = signal(0);
   pageSize = 10;
+  showDeleteModal = signal(false);
+  eventToDelete = signal<{ id: string; title: string } | null>(null);
 
   constructor(
     private eventService: EventService,
@@ -63,18 +65,31 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  deleteEvent(id: string, title: string): void {
-    if (confirm(`Are you sure you want to delete "${title}"?`)) {
-      this.eventService.deleteEvent(id).subscribe({
-        next: () => {
-          this.loadEvents();
-        },
-        error: (error) => {
-          this.errorMessage.set('Failed to delete event');
-          console.error('Error deleting event:', error);
-        }
-      });
-    }
+  openDeleteModal(id: string, title: string): void {
+    this.eventToDelete.set({ id, title });
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.eventToDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const event = this.eventToDelete();
+    if (!event) return;
+
+    this.eventService.deleteEvent(event.id).subscribe({
+      next: () => {
+        this.closeDeleteModal();
+        this.loadEvents();
+      },
+      error: (error) => {
+        this.errorMessage.set('Failed to delete event');
+        console.error('Error deleting event:', error);
+        this.closeDeleteModal();
+      }
+    });
   }
 
   goToPage(page: number): void {
@@ -100,14 +115,16 @@ export class EventListComponent implements OnInit {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'America/Los_Angeles'
     });
   }
 
   formatTime(date: Date | string): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleTimeString('en-US', {
       hour: 'numeric',
-      minute: 'numeric'
+      minute: '2-digit',
+      timeZone: 'America/Los_Angeles'
     });
   }
 

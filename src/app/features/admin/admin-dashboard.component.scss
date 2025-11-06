@@ -31,6 +31,7 @@
 
 .btn-logout {
   padding: 8px 16px;
+  height: 38px;
   background: #e74c3c;
   color: white;
   border: none;
@@ -107,13 +108,31 @@
   }
 
   .stat-number {
+    height: 50px;
+    line-height: 50px;
     margin: 0;
     font-size: 48px;
     font-weight: 600;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .stat-loading {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mini-spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
   }
 
   .stat-link {
@@ -190,4 +209,9 @@
       color: #999;
     }
   }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

@@ -1,0 +1,290 @@
+<div class="create-event-container">
+  <header class="create-event-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+      <h1>Create Event</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="create-event-content">
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <div class="form-card">
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="title">Event Title *</label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              placeholder="Enter event title"
+              [class.error]="title?.invalid && title?.touched"
+            />
+            @if (title?.invalid && title?.touched) {
+              <div class="error-message">
+                @if (title?.errors?.['required']) {
+                  <span>Title is required</span>
+                }
+                @if (title?.errors?.['minlength']) {
+                  <span>Title must be at least 3 characters</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Enter event description"
+              rows="4"
+              [class.error]="description?.invalid && description?.touched"
+            ></textarea>
+            @if (description?.invalid && description?.touched) {
+              <div class="error-message">
+                @if (description?.errors?.['required']) {
+                  <span>Description is required</span>
+                }
+                @if (description?.errors?.['minlength']) {
+                  <span>Description must be at least 10 characters</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="location">Location *</label>
+            <input
+              type="text"
+              id="location"
+              formControlName="location"
+              placeholder="Enter event location"
+              [class.error]="location?.invalid && location?.touched"
+            />
+            @if (location?.invalid && location?.touched) {
+              <div class="error-message">
+                @if (location?.errors?.['required']) {
+                  <span>Location is required</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <div class="category-dropdown-container">
+              <input
+                type="text"
+                id="category"
+                [value]="categorySearchText()"
+                (input)="onCategorySearch($event)"
+                (focus)="showCategoryDropdown.set(true)"
+                placeholder="Search or select category"
+                class="category-search-input"
+              />
+              @if (showCategoryDropdown()) {
+                <div class="category-dropdown">
+                  <div class="category-dropdown-header">
+                    <button
+                      type="button"
+                      class="add-category-btn"
+                      (click)="openAddCategoryModal()"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Add New Category
+                    </button>
+                  </div>
+                  <div class="category-list">
+                    @if (filteredCategories().length === 0) {
+                      <div class="no-categories">No categories found</div>
+                    }
+                    @for (cat of filteredCategories(); track cat.id) {
+                      <div class="category-item" (click)="selectCategory(cat)">
+                        {{ cat.name }}
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="eventDate">Event Date *</label>
+            <input
+              type="date"
+              id="eventDate"
+              formControlName="eventDate"
+              [class.error]="eventDate?.invalid && eventDate?.touched"
+            />
+            @if (eventDate?.invalid && eventDate?.touched) {
+              <div class="error-message">
+                @if (eventDate?.errors?.['required']) {
+                  <span>Event date is required</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="startTime">Start Time *</label>
+            <input
+              type="time"
+              id="startTime"
+              formControlName="startTime"
+              [class.error]="startTime?.invalid && startTime?.touched"
+            />
+            @if (startTime?.invalid && startTime?.touched) {
+              <div class="error-message">
+                @if (startTime?.errors?.['required']) {
+                  <span>Start time is required</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="endTime">End Time *</label>
+            <input
+              type="time"
+              id="endTime"
+              formControlName="endTime"
+              [class.error]="endTime?.invalid && endTime?.touched"
+            />
+            @if (endTime?.invalid && endTime?.touched) {
+              <div class="error-message">
+                @if (endTime?.errors?.['required']) {
+                  <span>End time is required</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="capacity">Capacity</label>
+            <input
+              type="number"
+              id="capacity"
+              formControlName="capacity"
+              placeholder="Leave empty for unlimited"
+              min="1"
+              [class.error]="capacity?.invalid && capacity?.touched"
+            />
+            @if (capacity?.invalid && capacity?.touched) {
+              <div class="error-message">
+                @if (capacity?.errors?.['min']) {
+                  <span>Capacity must be at least 1</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status *</label>
+            <select
+              id="status"
+              formControlName="status"
+              [class.error]="status?.invalid && status?.touched"
+            >
+              @for (statusOption of statusOptions; track statusOption) {
+                <option [value]="statusOption">{{ statusOption }}</option>
+              }
+            </select>
+            @if (status?.invalid && status?.touched) {
+              <div class="error-message">
+                @if (status?.errors?.['required']) {
+                  <span>Status is required</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="goBack()">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="isLoading()"
+          >
+            @if (isLoading()) {
+              <span>Creating...</span>
+            } @else {
+              <span>Create Event</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Add Category Modal -->
+  @if (showAddCategoryModal()) {
+    <div class="modal-overlay" (click)="closeAddCategoryModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Add New Category</h2>
+          <button class="modal-close" (click)="closeAddCategoryModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newCategoryName">Category Name</label>
+            <input
+              type="text"
+              id="newCategoryName"
+              [(ngModel)]="newCategoryName"
+              placeholder="Enter category name"
+              (keyup.enter)="saveNewCategory()"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeAddCategoryModal()">
+            Cancel
+          </button>
+          <button type="button" class="btn-primary" (click)="saveNewCategory()">
+            Save Category
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

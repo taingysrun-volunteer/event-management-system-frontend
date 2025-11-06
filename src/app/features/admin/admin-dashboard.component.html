@@ -2,39 +2,45 @@
   <header class="dashboard-header">
     <h1>Admin Dashboard</h1>
     <div class="user-info">
-      @if (currentUser()) {
-        <span>Welcome, {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+      @if (currentUser) {
+        <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
         <button class="btn-logout" (click)="logout()">Logout</button>
       }
     </div>
   </header>
 
   <main class="dashboard-content">
-    <div class="welcome-card">
-      <h2>Welcome to Admin Panel</h2>
-      <p>You are logged in as an Administrator</p>
-      @if (currentUser()) {
-        <div class="user-details">
-          <p><strong>Username:</strong> {{ currentUser()?.username }}</p>
-          <p><strong>Email:</strong> {{ currentUser()?.email }}</p>
-          <p><strong>Role:</strong> {{ currentUser()?.role }}</p>
-        </div>
-      }
-    </div>
-
     <div class="stats-grid">
       <div class="stat-card clickable" routerLink="/admin/events">
         <h3>Events</h3>
-        <p class="stat-number">0</p>
+        @if (isLoading()) {
+          <div class="stat-loading">
+            <div class="mini-spinner"></div>
+          </div>
+        } @else {
+          <p class="stat-number">{{ eventsCount() }}</p>
+        }
         <p class="stat-link">Manage Events →</p>
       </div>
       <div class="stat-card">
         <h3>Users</h3>
-        <p class="stat-number">0</p>
+        @if (isLoading()) {
+          <div class="stat-loading">
+            <div class="mini-spinner"></div>
+          </div>
+        } @else {
+          <p class="stat-number">{{ usersCount() }}</p>
+        }
       </div>
       <div class="stat-card">
         <h3>Categories</h3>
-        <p class="stat-number">0</p>
+        @if (isLoading()) {
+          <div class="stat-loading">
+            <div class="mini-spinner"></div>
+          </div>
+        } @else {
+          <p class="stat-number">{{ categoriesCount() }}</p>
+        }
       </div>
     </div>
 
