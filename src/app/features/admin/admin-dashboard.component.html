@@ -22,7 +22,7 @@
         }
         <p class="stat-link">Manage Events →</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card clickable" routerLink="/admin/users">
         <h3>Users</h3>
         @if (isLoading()) {
           <div class="stat-loading">
@@ -31,8 +31,9 @@
         } @else {
           <p class="stat-number">{{ usersCount() }}</p>
         }
+        <p class="stat-link">Manage Users →</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card clickable" routerLink="/admin/categories">
         <h3>Categories</h3>
         @if (isLoading()) {
           <div class="stat-loading">
@@ -41,6 +42,7 @@
         } @else {
           <p class="stat-number">{{ categoriesCount() }}</p>
         }
+        <p class="stat-link">Manage Categories →</p>
       </div>
     </div>
 
@@ -65,13 +67,13 @@
           <h3>Create Event</h3>
           <p>Add a new event</p>
         </a>
-        <div class="action-card disabled">
+        <div class="action-card" routerLink="/admin/users">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
           <h3>Manage Users</h3>
-          <p>Coming soon</p>
+          <p>View and manage all users</p>
         </div>
       </div>
     </div>

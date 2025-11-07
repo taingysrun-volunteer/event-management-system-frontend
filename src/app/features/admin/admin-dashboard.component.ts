@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { CategoryService } from '../../core/services/category.service';
+import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { forkJoin } from 'rxjs';
 
@@ -25,6 +26,7 @@ export class AdminDashboardComponent implements OnInit {
     private authService: AuthService,
     private eventService: EventService,
     private categoryService: CategoryService,
+    private userService: UserService,
     private router: Router
   ) {}
 
@@ -38,7 +40,8 @@ export class AdminDashboardComponent implements OnInit {
 
     forkJoin({
       events: this.eventService.getAllEvents(0, 1),
-      categories: this.categoryService.getAllCategories()
+      categories: this.categoryService.getAllCategories(),
+      users: this.userService.getAllUsers({ page: 0, size: 1 })
     }).subscribe({
       next: (results) => {
         // Handle events count
@@ -63,8 +66,10 @@ export class AdminDashboardComponent implements OnInit {
           }
         }
 
-        // Users count - placeholder for now (would need a user API endpoint)
-        this.usersCount.set(0);
+        // Handle users count
+        if (results.users) {
+          this.usersCount.set(results.users.totalItems);
+        }
 
         this.isLoading.set(false);
       },

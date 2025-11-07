@@ -1,0 +1,177 @@
+<div class="categories-container">
+  <header class="categories-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+      <h1>Categories Management</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-primary" (click)="openAddModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Category
+      </button>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="categories-content">
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading categories...</p>
+      </div>
+    } @else if (categories().length === 0) {
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+        <h2>No categories yet</h2>
+        <p>Get started by creating your first category</p>
+        <button class="btn-primary" (click)="openAddModal()">Add Category</button>
+      </div>
+    } @else {
+      <div class="categories-table-container">
+        <table class="categories-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of categories(); track category.id) {
+              <tr>
+                <td class="category-name">{{ category.name }}</td>
+                <td class="category-description">
+                  @if (category.description) {
+                    {{ category.description }}
+                  } @else {
+                    <span class="no-description">—</span>
+                  }
+                </td>
+                <td class="actions">
+                  <button class="btn-icon btn-edit" (click)="openEditModal(category)" title="Edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button class="btn-icon btn-delete" (click)="openDeleteModal(category)" title="Delete">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+
+  <!-- Add/Edit Category Modal -->
+  @if (showCategoryModal()) {
+    <div class="modal-overlay" (click)="closeCategoryModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditMode() ? 'Edit Category' : 'Add New Category' }}</h2>
+          <button class="modal-close" (click)="closeCategoryModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="categoryName">Category Name *</label>
+            <input
+              type="text"
+              id="categoryName"
+              [(ngModel)]="categoryName"
+              placeholder="Enter category name"
+              (keyup.enter)="saveCategory()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="categoryDescription">Description</label>
+            <textarea
+              id="categoryDescription"
+              [(ngModel)]="categoryDescription"
+              placeholder="Enter category description (optional)"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeCategoryModal()">
+            Cancel
+          </button>
+          <button type="button" class="btn-primary" (click)="saveCategory()">
+            {{ isEditMode() ? 'Update' : 'Create' }} Category
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteModal()) {
+    <div class="modal-overlay" (click)="closeDeleteModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Delete Category</h2>
+          <button class="modal-close" (click)="closeDeleteModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="delete-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <p>Are you sure you want to delete this category?</p>
+            <p class="category-name-highlight">"{{ categoryToDelete()?.name }}"</p>
+            <p class="warning-text">This action cannot be undone. Events using this category may be affected.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeDeleteModal()">
+            Cancel
+          </button>
+          <button type="button" class="btn-danger" (click)="confirmDelete()">
+            Delete Category
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

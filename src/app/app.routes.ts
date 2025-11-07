@@ -26,6 +26,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/events/event-list.component').then(m => m.EventListComponent)
   },
   {
+    path: 'admin/categories',
+    loadComponent: () => import('./features/admin/categories/category-list.component').then(m => m.CategoryListComponent)
+  },
+  {
+    path: 'admin/users',
+    loadComponent: () => import('./features/admin/users/user-list.component').then(m => m.UserListComponent)
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
   },
