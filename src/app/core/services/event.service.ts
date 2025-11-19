@@ -36,4 +36,19 @@ export class EventService {
   cancelEvent(id: string): Observable<Event> {
     return this.apiService.post<Event>(`/events/${id}/cancel`, {});
   }
+
+  getPublishedEvents(page: number = 0, size: number = 10): Observable<EventListResponse> {
+    return this.apiService.get<EventListResponse>(`/events?status=published&page=${page}&size=${size}`);
+  }
+
+  searchEvents(searchTerm: string, categoryId?: string, page: number = 0, size: number = 10): Observable<EventListResponse> {
+    let params = `status=published&page=${page}&size=${size}`;
+    if (searchTerm) {
+      params += `&search=${encodeURIComponent(searchTerm)}`;
+    }
+    if (categoryId) {
+      params += `&categoryId=${categoryId}`;
+    }
+    return this.apiService.get<EventListResponse>(`/events?${params}`);
+  }
 }

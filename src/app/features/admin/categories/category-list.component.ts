@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Category } from '../../../core/models/category.model';
+import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ToolbarComponent],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss']
 })

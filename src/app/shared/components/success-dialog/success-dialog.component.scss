@@ -1,0 +1,271 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+  padding: 20px;
+}
+
+.dialog-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 320px;
+  max-width: 420px;
+  width: 100%;
+  animation: slideUp 0.3s ease-out;
+
+  // Type-specific styles
+  &.dialog-success {
+    border-left: 4px solid #4caf50;
+  }
+
+  &.dialog-error {
+    border-left: 4px solid #f44336;
+  }
+
+  &.dialog-warning {
+    border-left: 4px solid #ff9800;
+  }
+
+  &.dialog-info {
+    border-left: 4px solid #2196f3;
+  }
+}
+
+.btn-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+    color: #666;
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.dialog-body {
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+}
+
+.icon-wrapper {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &.icon-success {
+    background: #4caf50;
+  }
+
+  &.icon-error {
+    background: #f44336;
+  }
+
+  &.icon-warning {
+    background: #ff9800;
+  }
+
+  &.icon-info {
+    background: #2196f3;
+  }
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.content {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.75rem 0;
+}
+
+.message {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #666;
+  margin: 0;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+
+  &.btn-success {
+    background: #4caf50;
+
+    &:hover {
+      background: #45a049;
+    }
+  }
+
+  &.btn-error {
+    background: #f44336;
+
+    &:hover {
+      background: #e53935;
+    }
+  }
+
+  &.btn-warning {
+    background: #ff9800;
+
+    &:hover {
+      background: #fb8c00;
+    }
+  }
+
+  &.btn-info {
+    background: #2196f3;
+
+    &:hover {
+      background: #1e88e5;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Auto-close progress bar
+.auto-close-bar {
+  margin-top: 1rem;
+  height: 3px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.auto-close-progress {
+  height: 100%;
+  background: currentColor;
+  animation: progressBar linear forwards;
+  transform-origin: left;
+
+  .dialog-success & {
+    background: #4caf50;
+  }
+
+  .dialog-error & {
+    background: #f44336;
+  }
+
+  .dialog-warning & {
+    background: #ff9800;
+  }
+
+  .dialog-info & {
+    background: #2196f3;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progressBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .dialog-overlay {
+    padding: 16px;
+  }
+
+  .dialog-content {
+    min-width: unset;
+  }
+
+  .dialog-body {
+    padding: 1.75rem 1.25rem 1.25rem;
+  }
+
+  .icon {
+    width: 56px;
+    height: 56px;
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .message {
+    font-size: 0.875rem;
+  }
+}

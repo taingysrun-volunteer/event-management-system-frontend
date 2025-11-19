@@ -1,0 +1,44 @@
+@if (show()) {
+  <div class="dialog-overlay" (click)="closeDialog()">
+    <div class="dialog-content" [ngClass]="'dialog-' + type" (click)="$event.stopPropagation()">
+      <!-- Close button -->
+      <button class="btn-close" (click)="onClose()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="dialog-body">
+        <!-- Icon -->
+        <div class="icon-wrapper">
+          <div class="icon" [ngClass]="'icon-' + type">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" [innerHTML]="getIconSvg()">
+            </svg>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="title">{{ title }}</h2>
+          <p class="message">{{ message }}</p>
+        </div>
+
+        <!-- Action button -->
+        <button
+          (click)="onClose()"
+          class="btn-action"
+          [ngClass]="'btn-' + type"
+        >
+          {{ buttonText }}
+        </button>
+
+        <!-- Auto-close progress bar -->
+        @if (autoClose) {
+          <div class="auto-close-bar">
+            <div class="auto-close-progress" [style.animation-duration.ms]="autoCloseDelay"></div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,42 @@
+@if (show()) {
+  <div class="dialog-overlay" (click)="closeDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>{{ title }}</h2>
+        <button
+          (click)="onCancel()"
+          class="btn-close"
+          [disabled]="isProcessing()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="dialog-body">
+        <p>{{ message }}</p>
+      </div>
+
+      <div class="dialog-footer">
+        <button
+          (click)="onCancel()"
+          class="btn-secondary"
+          [disabled]="isProcessing()"
+        >
+          {{ cancelText }}
+        </button>
+        <button
+          (click)="onConfirm()"
+          [class]="confirmButtonClass"
+          [disabled]="isProcessing()"
+        >
+          @if (isProcessing()) {
+            <span>Processing...</span>
+          } @else {
+            <span>{{ confirmText }}</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

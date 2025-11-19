@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { Event } from '../../../core/models/event.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ToolbarComponent],
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss']
 })

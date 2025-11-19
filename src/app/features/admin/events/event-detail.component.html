@@ -1,15 +1,11 @@
 <div class="event-detail-container">
-  <header class="event-detail-header">
-    <div class="header-left">
-      <button class="btn-back" (click)="goBack()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Back
-      </button>
-      <h1>Event Details</h1>
-    </div>
-    <div class="header-right">
+  <app-toolbar
+    title="Event Details"
+    [showBackButton]="true"
+    backButtonText="Back"
+    (back)="goBack()"
+    (logout)="logout()">
+    <div toolbarActions>
       @if (event()) {
         <button class="btn-edit" (click)="goToEdit()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -19,9 +15,8 @@
           Edit Event
         </button>
       }
-      <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
-  </header>
+  </app-toolbar>
 
   <main class="event-detail-content">
     @if (errorMessage()) {
@@ -151,6 +146,223 @@
           }
         </div>
       </div>
+
+      <!-- Registrations Section -->
+      <div class="detail-card registrations-card">
+        <div class="card-header">
+          <div class="title-section">
+            <h2>Event Registrations</h2>
+            @if (totalRegistrations() > 0) {
+              <span class="registrations-count">{{ totalRegistrations() }} total</span>
+            }
+          </div>
+          <div class="header-actions">
+            @if (totalRegistrations() > 0) {
+              <button class="btn-export" (click)="exportRegistrations()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export CSV
+              </button>
+            }
+            <button class="btn-toggle" (click)="toggleRegistrations()">
+              {{ showRegistrations() ? 'Hide' : 'Show' }} Registrations
+            </button>
+          </div>
+        </div>
+
+        @if (showRegistrations()) {
+          <div class="card-body">
+            @if (isLoadingRegistrations()) {
+              <div class="loading-container">
+                <div class="spinner"></div>
+                <p>Loading registrations...</p>
+              </div>
+            } @else if (registrations().length > 0) {
+              <div class="registrations-table-wrapper">
+                <table class="registrations-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Email</th>
+                      <th>Registration Date Time</th>
+                      <th>Status</th>
+                      <th>Notes</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (registration of registrations(); track registration.id) {
+                      <tr>
+                        <td>
+                          <div class="user-info">
+                            <strong>{{ registration.user.firstName }} {{ registration.user.lastName }}</strong>
+                            <span class="username">{{ registration.user.username }}</span>
+                          </div>
+                        </td>
+                        <td>{{ registration.user.email }}</td>
+                        <td>{{ formatRegistrationDate(registration.createdAt) }}</td>
+                        <td>
+                          <span class="status-badge" [ngClass]="getRegistrationStatusClass(registration.status)">
+                            {{ registration.status }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="notes-text">{{ registration.notes || '-' }}</span>
+                        </td>
+                        <td>
+                          <button
+                            class="btn-action btn-edit-registration"
+                            (click)="openUpdateDialog(registration)"
+                            title="Update registration">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination -->
+              @if (totalPages() > 1) {
+                <div class="pagination">
+                  <button
+                    (click)="previousPage()"
+                    [disabled]="currentPage() === 0"
+                    class="btn-page"
+                  >
+                    Previous
+                  </button>
+
+                  <div class="page-info">
+                    Page {{ currentPage() + 1 }} of {{ totalPages() }}
+                  </div>
+
+                  <button
+                    (click)="nextPage()"
+                    [disabled]="currentPage() === totalPages() - 1"
+                    class="btn-page"
+                  >
+                    Next
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <h3>No Registrations Yet</h3>
+                <p>No one has registered for this event yet.</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
     }
   </main>
 </div>
+
+<!-- Update Registration Dialog -->
+@if (showUpdateDialog()) {
+  <div class="modal-overlay" (click)="closeUpdateDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Update Registration</h3>
+        <button class="btn-close" (click)="closeUpdateDialog()" [disabled]="isUpdating()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        @if (selectedRegistration()) {
+          <div class="update-form">
+            <div class="form-group">
+              <label>User</label>
+              <p class="user-details">
+                <strong>{{ selectedRegistration()!.user.firstName }} {{ selectedRegistration()!.user.lastName }}</strong>
+                <span class="email">{{ selectedRegistration()!.user.email }}</span>
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select
+                id="status"
+                [(ngModel)]="updateData.status"
+                [disabled]="isUpdating()"
+                class="form-control">
+                <option [value]="RegistrationStatus.PENDING">Pending</option>
+                <option [value]="RegistrationStatus.CONFIRMED">Confirmed</option>
+                <option [value]="RegistrationStatus.CANCELLED">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Notes (Optional)</label>
+              <textarea
+                id="notes"
+                [(ngModel)]="updateData.notes"
+                [disabled]="isUpdating()"
+                class="form-control"
+                rows="3"
+                placeholder="Add notes about this registration..."></textarea>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn-secondary"
+          (click)="closeUpdateDialog()"
+          [disabled]="isUpdating()">
+          Cancel
+        </button>
+        <button
+          class="btn-primary"
+          (click)="confirmUpdate()"
+          [disabled]="isUpdating()">
+          @if (isUpdating()) {
+            <span class="spinner-small"></span>
+            Updating...
+          } @else {
+            Update Registration
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Success Dialog -->
+<app-success-dialog
+  [show]="showSuccessDialog"
+  [type]="'success'"
+  [title]="dialogTitle"
+  [message]="dialogMessage"
+  [buttonText]="'Got it'"
+  (closed)="closeSuccessDialog()">
+</app-success-dialog>
+
+<!-- Error Dialog -->
+<app-success-dialog
+  [show]="showErrorDialog"
+  [type]="'error'"
+  [title]="dialogTitle"
+  [message]="dialogMessage"
+  [buttonText]="'Try Again'"
+  (closed)="closeErrorDialog()">
+</app-success-dialog>

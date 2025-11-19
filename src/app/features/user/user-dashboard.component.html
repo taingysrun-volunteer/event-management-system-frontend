@@ -1,13 +1,10 @@
 <div class="dashboard-container">
-  <header class="dashboard-header">
-    <h1>Dashboard</h1>
-    <div class="user-info">
-      @if (currentUser) {
-        <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
-      }
-    </div>
-  </header>
+  <app-toolbar
+    title="Dashboard"
+    [showLogout]="true"
+    [currentUser]="currentUser"
+    (logout)="logout()">
+  </app-toolbar>
 
   <main class="dashboard-content">
     <div class="welcome-card">
@@ -21,19 +18,26 @@
       }
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3>My Events</h3>
-        <p class="stat-number">0</p>
-      </div>
-      <div class="stat-card">
-        <h3>Registered Events</h3>
-        <p class="stat-number">0</p>
-      </div>
-      <div class="stat-card">
-        <h3>Upcoming</h3>
-        <p class="stat-number">0</p>
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <button class="action-card" (click)="browseEvents()">
+          <div class="action-icon">🎪</div>
+          <div class="action-title">Browse Events</div>
+          <div class="action-description">Discover and register for upcoming events</div>
+        </button>
+        <button class="action-card" (click)="viewMyRegistrations()">
+          <div class="action-icon">📋</div>
+          <div class="action-title">My Registrations</div>
+          <div class="action-description">View your registered events</div>
+        </button>
+        <button class="action-card" disabled>
+          <div class="action-icon">⚙️</div>
+          <div class="action-title">Settings</div>
+          <div class="action-description">Manage your account settings</div>
+        </button>
       </div>
     </div>
+
   </main>
 </div>

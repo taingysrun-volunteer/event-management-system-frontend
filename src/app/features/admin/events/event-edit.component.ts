@@ -7,11 +7,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { CategoryService } from '../../../core/services/category.service';
 import {CreateEventRequest, Event, UpdateEventRequest} from '../../../core/models/event.model';
 import { Category } from '../../../core/models/category.model';
+import {ToolbarComponent} from '../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-event-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ToolbarComponent],
   templateUrl: './event-edit.component.html',
   styleUrls: ['./event-edit.component.scss']
 })

@@ -2,16 +2,13 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { EventService } from '../../core/services/event.service';
-import { CategoryService } from '../../core/services/category.service';
-import { UserService } from '../../core/services/user.service';
-import { User } from '../../core/models/user.model';
-import { forkJoin } from 'rxjs';
+import { SummaryService } from '../../core/services/summary.service';
+import { ToolbarComponent } from '../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ToolbarComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
@@ -24,9 +21,7 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private eventService: EventService,
-    private categoryService: CategoryService,
-    private userService: UserService,
+    private summaryService: SummaryService,
     private router: Router
   ) {}
 
@@ -38,43 +33,15 @@ export class AdminDashboardComponent implements OnInit {
   loadDashboardData(): void {
     this.isLoading.set(true);
 
-    forkJoin({
-      events: this.eventService.getAllEvents(0, 1),
-      categories: this.categoryService.getAllCategories(),
-      users: this.userService.getAllUsers({ page: 0, size: 1 })
-    }).subscribe({
-      next: (results) => {
-        // Handle events count
-        if (results.events) {
-          const eventsData = results.events as any;
-          if (eventsData.totalElements !== undefined) {
-            this.eventsCount.set(eventsData.totalElements);
-          } else if (Array.isArray(eventsData)) {
-            this.eventsCount.set(eventsData.length);
-          } else if (eventsData.events && Array.isArray(eventsData.events)) {
-            this.eventsCount.set(eventsData.totalElements || eventsData.events.length);
-          }
-        }
-
-        // Handle categories count
-        if (results.categories) {
-          const categoriesData = results.categories as any;
-          if (categoriesData.categories && Array.isArray(categoriesData.categories)) {
-            this.categoriesCount.set(categoriesData.categories.length);
-          } else if (Array.isArray(categoriesData)) {
-            this.categoriesCount.set(categoriesData.length);
-          }
-        }
-
-        // Handle users count
-        if (results.users) {
-          this.usersCount.set(results.users.totalItems);
-        }
-
+    this.summaryService.getDashboardSummary().subscribe({
+      next: (summary) => {
+        this.eventsCount.set(summary.totalEvents);
+        this.usersCount.set(summary.totalUsers);
+        this.categoriesCount.set(summary.totalCategories);
         this.isLoading.set(false);
       },
       error: (error) => {
-        console.error('Error loading dashboard data:', error);
+        console.error('Error loading dashboard summary:', error);
         this.isLoading.set(false);
       }
     });

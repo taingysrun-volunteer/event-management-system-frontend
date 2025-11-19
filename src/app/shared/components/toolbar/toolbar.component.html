@@ -1,0 +1,28 @@
+<header class="toolbar">
+  <div class="toolbar-left">
+    @if (currentUser && !showBackButton && currentUser.role == 'USER') {
+      <h1>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</h1>
+    }
+
+    @if (showBackButton) {
+      <button class="btn-back" (click)="onBack()">
+        <mat-icon class="icon-arrow">arrow_back</mat-icon>{{ backButtonText }}
+      </button>
+    }
+    <h1>{{ title }}</h1>
+  </div>
+
+  <div class="toolbar-right">
+    <ng-content select="[toolbarActions]"></ng-content>
+
+    @if (currentUser && !showBackButton && currentUser.role == 'ADMIN') {
+      <span class="user-welcome">Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+    }
+
+    @if (showLogout) {
+      <button class="btn-logout" (click)="onLogout()">
+        <mat-icon class="icon-logout">logout</mat-icon> Logout
+      </button>
+    }
+  </div>
+</header>

@@ -1,0 +1,228 @@
+<div class="detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading event details...</p>
+    </div>
+  }
+
+  <!-- Event Detail -->
+  @if (!loading() && event()) {
+    <app-toolbar
+      title="Event Details"
+      [showBackButton]="true"
+      backButtonText="Back to Events"
+      [showLogout]="false"
+      (back)="goBack()">
+      <div toolbarActions>
+        @if (event()) {
+          @if (isAlreadyRegistered()) {
+            <button (click)="openCancelDialog()" class="btn-nav-danger">
+              Cancel Registration
+            </button>
+          } @else if (isEventFull(event()!)) {
+            <button disabled class="btn-nav-disabled">
+              Event Full
+            </button>
+          } @else if (!isEventUpcoming(event()!)) {
+            <button disabled class="btn-nav-disabled">
+              Event Ended
+            </button>
+          } @else {
+            <button (click)="openRegisterModal()" class="btn-nav-primary">
+              Register Now
+            </button>
+          }
+        }
+      </div>
+    </app-toolbar>
+
+    <div class="detail-content">
+
+      <!-- Event Main Info -->
+      <div class="event-main">
+        <div class="event-hero">
+          <div class="event-status">
+            @if (event()?.category?.name) {
+              <span class="event-category">{{ event()!.category!.name }}</span>
+            }
+            @if (event()?.status) {
+              <span class="event-badge" [class]="getStatusClass(event()?.status)">
+                {{ event()?.status }}
+              </span>
+            }
+          </div>
+          <h1 class="event-title">{{ event()?.title }}</h1>
+        </div>
+
+        <div class="event-content-grid">
+          <!-- Left Column: Event Details -->
+          <div class="event-info">
+            <section class="info-section">
+              <h2>About This Event</h2>
+              <p class="event-description">{{ event()?.description }}</p>
+            </section>
+
+            <section class="info-section">
+              <h2>Event Details</h2>
+              <div class="details-list">
+                <div class="detail-item">
+                  <div class="detail-icon">📅</div>
+                  <div class="detail-content">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value">{{ getEventDate(event()!) }}</div>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <div class="detail-icon">🕐</div>
+                  <div class="detail-content">
+                    <div class="detail-label">Time</div>
+                    <div class="detail-value">{{ getEventTime(event()!) }}</div>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <div class="detail-icon">📍</div>
+                  <div class="detail-content">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">{{ event()?.location }}</div>
+                  </div>
+                </div>
+
+                @if (event()?.capacity !== undefined) {
+                  <div class="detail-item">
+                    <div class="detail-icon">👥</div>
+                    <div class="detail-content">
+                      <div class="detail-label">Capacity</div>
+                      <div class="detail-value">
+                        {{ event()?.capacity }} people
+                        @if (event()?.availableSeats !== undefined) {
+                          <span class="seats-info">
+                            ({{ event()?.availableSeats }} seats available)
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column: Registration Card (Only show if registered) -->
+          @if (isAlreadyRegistered()) {
+            <div class="registration-sidebar">
+              <div class="registration-card">
+                <h3>Registration</h3>
+
+                <div class="alert alert-success">
+                  <strong>You're Registered!</strong>
+                  <p>You have successfully registered for this event.</p>
+                </div>
+
+                <button
+                  (click)="openCancelDialog()"
+                  class="btn-cancel-registration"
+                >
+                  Cancel Registration
+                </button>
+
+                <div class="registration-note">
+                  <p>Check your email for confirmation details</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Registration Modal -->
+  @if (showRegisterModal()) {
+    <div class="modal-overlay" (click)="closeRegisterModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        @if (!registrationSuccess()) {
+          <div class="modal-header">
+            <h2>Confirm Registration</h2>
+            <button (click)="closeRegisterModal()" class="btn-close">×</button>
+          </div>
+
+          <div class="modal-body">
+            @if (registrationError()) {
+              <div class="alert alert-error">
+                <strong>Registration Failed</strong>
+                <p>{{ registrationError() }}</p>
+              </div>
+            }
+
+            <p>You are about to register for:</p>
+            <div class="registration-summary">
+              <h3>{{ event()?.title }}</h3>
+              <div class="summary-details">
+                <p><strong>Date:</strong> {{ getEventDate(event()!) }}</p>
+                <p><strong>Time:</strong> {{ getEventTime(event()!) }}</p>
+                <p><strong>Location:</strong> {{ event()?.location }}</p>
+              </div>
+            </div>
+            <p class="confirmation-text">
+              A confirmation email will be sent to your registered email address.
+            </p>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              (click)="closeRegisterModal()"
+              class="btn-cancel"
+              [disabled]="registering()"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="confirmRegistration()"
+              class="btn-confirm"
+              [disabled]="registering()"
+            >
+              @if (registering()) {
+                <span>Registering...</span>
+              } @else {
+                <span>Confirm Registration</span>
+              }
+            </button>
+          </div>
+        } @else {
+          <div class="success-message">
+            <div class="success-icon">✓</div>
+            <h2>Registration Successful!</h2>
+            <p>You have been registered for this event.</p>
+            <p class="success-note">Check your email for confirmation details.</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Cancel Registration Confirmation Dialog -->
+  <app-confirmation-dialog
+    [show]="showCancelDialog"
+    [title]="'Cancel Registration'"
+    [message]="'Are you sure you want to cancel your registration?'"
+    [confirmText]="'Yes, Cancel Registration'"
+    [cancelText]="'Keep Registration'"
+    [confirmButtonClass]="'btn-danger'"
+    [isProcessing]="cancelling"
+    (confirmed)="confirmCancelRegistration()"
+    (cancelled)="closeCancelDialog()"
+  ></app-confirmation-dialog>
+
+  <!-- Cancel Success Dialog -->
+  <app-success-dialog
+    [show]="showCancelSuccessDialog"
+    [title]="'Registration Cancelled'"
+    [message]="'Your registration has been successfully cancelled.'"
+    [buttonText]="'Close'"
+    (closed)="closeCancelSuccessDialog()"
+  ></app-success-dialog>
+</div>

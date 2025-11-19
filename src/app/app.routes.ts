@@ -38,8 +38,21 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
   },
   {
+    path: 'my-registrations',
+    loadComponent: () => import('./features/user/registrations/my-registrations.component').then(m => m.MyRegistrationsComponent)
+  },
+  {
+    path: 'events/:id',
+    loadComponent: () => import('./features/user/events/event-detail.component').then(m => m.EventDetailComponent)
+  },
+  {
+    path: 'events',
+    loadComponent: () => import('./features/user/events/event-browse.component').then(m => m.EventBrowseComponent)
+  },
+  {
     path: 'dashboard',
-    loadComponent: () => import('./features/user/user-dashboard.component').then(m => m.UserDashboardComponent)
+    redirectTo: '/events',
+    pathMatch: 'full'
   },
   {
     path: '',

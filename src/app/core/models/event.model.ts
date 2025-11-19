@@ -19,8 +19,8 @@ export interface Event {
 }
 
 export interface EventListResponse {
-  content: Event[];
-  totalElements: number;
+  events: Event[];
+  totalItems: number;
   totalPages: number;
   size: number;
   number: number;

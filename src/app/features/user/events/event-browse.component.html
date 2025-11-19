@@ -1,0 +1,176 @@
+<div class="browse-container">
+  <app-toolbar
+    [showBackButton]="false"
+    [showLogout]="true"
+    [currentUser]="currentUser"
+    (logout)="logout()">
+    <div toolbarActions>
+      <button (click)="goToMyRegistrations()" class="btn-nav-secondary">
+        My Registrations
+      </button>
+    </div>
+  </app-toolbar>
+
+  <header class="browse-header">
+    <p class="subtitle">Discover and register for upcoming events</p>
+  </header>
+
+  <!-- Search and Filter Section -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search events..."
+        (keyup.enter)="onSearch()"
+        class="search-input"
+      />
+      <button (click)="onSearch()" class="btn-search">Search</button>
+    </div>
+
+    <div class="filter-group">
+      <select
+        [(ngModel)]="selectedCategoryId"
+        (change)="onCategoryChange()"
+        class="category-select"
+      >
+        <option value="">All Categories</option>
+        @for (category of categories(); track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+        }
+      </select>
+
+      @if (searchTerm || selectedCategoryId) {
+        <button (click)="clearFilters()" class="btn-clear">Clear Filters</button>
+      }
+    </div>
+  </div>
+
+  <!-- Results Info -->
+  <div class="results-info">
+    <p>
+      Showing {{ events().length }} of {{ totalElements() }} events
+      @if (searchTerm || selectedCategoryId) {
+        <span class="filter-active">
+          (filtered)
+        </span>
+      }
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading events...</p>
+    </div>
+  }
+
+  <!-- Events Grid -->
+  @if (!loading() && events().length > 0) {
+    <div class="events-grid">
+      @for (event of events(); track event.id) {
+        <div class="event-card" (click)="viewEventDetail(event.id)">
+          <div class="event-card-header">
+            @if (event.category) {
+              <span class="event-category">{{ event.category.name }}</span>
+            }
+            @if (isEventFull(event)) {
+              <span class="event-badge full">Full</span>
+            } @else if (isEventUpcoming(event)) {
+              <span class="event-badge upcoming">Upcoming</span>
+            }
+          </div>
+
+          <div class="event-card-body">
+            <h3 class="event-title">{{ event.title }}</h3>
+            <p class="event-description">{{ event.description }}</p>
+
+            <div class="event-details">
+              <div class="detail-item">
+                <span class="detail-icon">📅</span>
+                <span class="detail-text">{{ getEventDate(event) }}</span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-icon">🕐</span>
+                <span class="detail-text">{{ getEventTime(event) }}</span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <span class="detail-text">{{ event.location }}</span>
+              </div>
+
+              @if (event.availableSeats !== undefined) {
+                <div class="detail-item">
+                  <span class="detail-icon">👥</span>
+                  <span class="detail-text">
+                    {{ event.availableSeats }} / {{ event.capacity }} seats available
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="event-card-footer">
+            <button class="btn-register" [disabled]="isEventFull(event)">
+              {{ isEventFull(event) ? 'Event Full' : 'View Details' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          (click)="previousPage()"
+          [disabled]="currentPage() === 0"
+          class="btn-page"
+        >
+          Previous
+        </button>
+
+        <div class="page-numbers">
+          @for (page of [].constructor(totalPages()); track $index) {
+            <button
+              (click)="goToPage($index)"
+              [class.active]="currentPage() === $index"
+              class="btn-page-number"
+            >
+              {{ $index + 1 }}
+            </button>
+          }
+        </div>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages() - 1"
+          class="btn-page"
+        >
+          Next
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && events().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🎪</div>
+      <h2>No Events Found</h2>
+      <p>
+        @if (searchTerm || selectedCategoryId) {
+          No events match your search criteria. Try adjusting your filters.
+        } @else {
+          There are no published events at the moment. Check back later!
+        }
+      </p>
+      @if (searchTerm || selectedCategoryId) {
+        <button (click)="clearFilters()" class="btn-clear-large">Clear Filters</button>
+      }
+    </div>
+  }
+</div>
