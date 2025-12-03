@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../core/services/event.service';
 import { Event } from '../../../core/models/event.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,7 +10,7 @@ import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.com
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, ToolbarComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ToolbarComponent],
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss']
 })
@@ -22,6 +23,11 @@ export class EventListComponent implements OnInit {
   pageSize = 10;
   showDeleteModal = signal(false);
   eventToDelete = signal<{ id: string; title: string } | null>(null);
+
+  // Search and filter
+  searchTerm = signal('');
+  selectedStatus = signal('ALL');
+  statusOptions = ['ALL', 'ACTIVE', 'DRAFT', 'CANCELLED', 'COMPLETED'];
 
   constructor(
     private eventService: EventService,
@@ -37,7 +43,10 @@ export class EventListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.eventService.getAllEvents(this.currentPage(), this.pageSize).subscribe({
+    const searchTerm = this.searchTerm() || undefined;
+    const status = this.selectedStatus() !== 'ALL' ? this.selectedStatus() : undefined;
+
+    this.eventService.searchAllEvents(searchTerm, status, this.currentPage(), this.pageSize).subscribe({
       next: (response: any) => {
 
         // Handle paginated response
@@ -90,6 +99,13 @@ export class EventListComponent implements OnInit {
         console.error('Error deleting event:', error);
         this.closeDeleteModal();
       }
+    });
+  }
+
+  cloneEvent(event: Event): void {
+    // Navigate to create form with clone parameter
+    this.router.navigate(['/admin/events/create'], {
+      queryParams: { clone: event.id }
     });
   }
 
@@ -150,5 +166,22 @@ export class EventListComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/admin']);
+  }
+
+  onSearch(): void {
+    this.currentPage.set(0); // Reset to first page
+    this.loadEvents();
+  }
+
+  onStatusChange(): void {
+    this.currentPage.set(0); // Reset to first page
+    this.loadEvents();
+  }
+
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedStatus.set('ALL');
+    this.currentPage.set(0);
+    this.loadEvents();
   }
 }

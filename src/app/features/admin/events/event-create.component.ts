@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { CreateEventRequest } from '../../../core/models/event.model';
 import { Category } from '../../../core/models/category.model';
 import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
+import {eventStatus} from '../../../shared/event-status';
 
 @Component({
   selector: 'app-event-create',
@@ -22,7 +23,7 @@ export class EventCreateComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
-  statusOptions = ['ACTIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED'];
+  statusOptions = eventStatus;
   categories = signal<Category[]>([]);
   filteredCategories = signal<Category[]>([]);
   categorySearchText = signal('');
@@ -30,13 +31,15 @@ export class EventCreateComponent implements OnInit {
   showAddCategoryModal = signal(false);
   newCategoryName = signal('');
   selectedCategoryId = signal<number | null>(null);
+  isCloning = signal(false);
 
   constructor(
     private fb: FormBuilder,
     private eventService: EventService,
     private categoryService: CategoryService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.eventForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
@@ -53,6 +56,67 @@ export class EventCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.checkForCloneParams();
+  }
+
+  checkForCloneParams(): void {
+    this.route.queryParams.subscribe(params => {
+      const cloneId = params['clone'];
+      if (cloneId) {
+        this.isCloning.set(true);
+        this.loadEventForCloning(cloneId);
+      }
+    });
+  }
+
+  loadEventForCloning(eventId: string): void {
+    this.isLoading.set(true);
+    this.eventService.getEventById(eventId).subscribe({
+      next: (event) => {
+        // Populate form with event data
+        const eventDate = this.extractDate(event.eventDate);
+        const startTime = this.extractTime(event.startTime);
+        const endTime = this.extractTime(event.endTime);
+
+        this.eventForm.patchValue({
+          title: `${event.title} (Copy)`,
+          description: event.description,
+          location: event.location,
+          eventDate: eventDate,
+          startTime: startTime,
+          endTime: endTime,
+          capacity: event.capacity || '',
+          status: 'ACTIVE' // Set to ACTIVE for cloned events
+        });
+
+        // Set category if exists
+        if (event.categoryId) {
+          this.selectedCategoryId.set(event.categoryId);
+          const category = this.categories().find(c => Number(c.id) === event.categoryId);
+          if (category) {
+            this.eventForm.patchValue({ category: category.name });
+            this.categorySearchText.set(category.name);
+          }
+        }
+
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Failed to load event for cloning');
+        console.error('Error loading event:', error);
+      }
+    });
+  }
+
+  extractDate(datetime: Date | string): string {
+    const date = new Date(datetime);
+    return date.toISOString().split('T')[0];
+  }
+
+  extractTime(datetime: Date | string): string {
+    const date = new Date(datetime);
+    return date.toTimeString().slice(0, 5);
   }
 
   loadCategories(): void {

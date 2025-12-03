@@ -29,16 +29,9 @@ export class EventService {
     return this.apiService.delete<void>(`/events/${id}`);
   }
 
-  publishEvent(id: string): Observable<Event> {
-    return this.apiService.post<Event>(`/events/${id}/publish`, {});
-  }
-
-  cancelEvent(id: string): Observable<Event> {
-    return this.apiService.post<Event>(`/events/${id}/cancel`, {});
-  }
 
   getPublishedEvents(page: number = 0, size: number = 10): Observable<EventListResponse> {
-    return this.apiService.get<EventListResponse>(`/events?status=published&page=${page}&size=${size}`);
+    return this.apiService.get<EventListResponse>(`/events?status=ACTIVE&page=${page}&size=${size}`);
   }
 
   searchEvents(searchTerm: string, categoryId?: string, page: number = 0, size: number = 10): Observable<EventListResponse> {
@@ -48,6 +41,17 @@ export class EventService {
     }
     if (categoryId) {
       params += `&categoryId=${categoryId}`;
+    }
+    return this.apiService.get<EventListResponse>(`/events?${params}`);
+  }
+
+  searchAllEvents(searchTerm?: string, status?: string, page: number = 0, size: number = 10): Observable<EventListResponse> {
+    let params = `page=${page}&size=${size}`;
+    if (searchTerm && searchTerm.trim()) {
+      params += `&search=${encodeURIComponent(searchTerm.trim())}`;
+    }
+    if (status && status !== 'ALL') {
+      params += `&status=${status}`;
     }
     return this.apiService.get<EventListResponse>(`/events?${params}`);
   }

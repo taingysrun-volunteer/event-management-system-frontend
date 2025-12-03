@@ -10,7 +10,7 @@ import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.com
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ToolbarComponent],
+  imports: [CommonModule, FormsModule, ToolbarComponent],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss']
 })

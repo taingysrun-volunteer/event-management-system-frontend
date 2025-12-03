@@ -8,6 +8,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import {CreateEventRequest, Event, UpdateEventRequest} from '../../../core/models/event.model';
 import { Category } from '../../../core/models/category.model';
 import {ToolbarComponent} from '../../../shared/components/toolbar/toolbar.component';
+import {eventStatus} from '../../../shared/event-status';
 
 @Component({
   selector: 'app-event-edit',
@@ -23,7 +24,7 @@ export class EventEditComponent implements OnInit {
   successMessage = signal<string | null>(null);
   eventId: string = '';
 
-  statusOptions = ['ACTIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED'];
+  statusOptions = eventStatus;
   categories = signal<Category[]>([]);
   filteredCategories = signal<Category[]>([]);
   categorySearchText = signal('');

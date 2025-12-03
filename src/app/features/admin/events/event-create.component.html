@@ -1,6 +1,6 @@
 <div class="create-event-container">
   <app-toolbar
-    title="Create Event"
+    [title]="isCloning() ? 'Clone Event' : 'Create Event'"
     [showBackButton]="true"
     backButtonText="Back"
     (back)="goBack()"
