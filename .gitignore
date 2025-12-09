@@ -56,4 +56,4 @@ Thumbs.db
 /docs/
 
 # E2E testing
-/e2e/
+/e2e/.env
