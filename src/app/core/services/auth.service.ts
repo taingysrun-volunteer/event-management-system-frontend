@@ -59,4 +59,13 @@ export class AuthService {
     const userJson = localStorage.getItem(this.USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }
+
+  hasRole(role: string): boolean {
+    const user = this.currentUser();
+    return user?.role === role;
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('admin');
+  }
 }

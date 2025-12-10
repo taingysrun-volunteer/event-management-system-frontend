@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { roleGuard } from './core/guards/role.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,43 +13,60 @@ export const routes: Routes = [
   },
   {
     path: 'admin/events/create',
-    loadComponent: () => import('./features/admin/events/event-create.component').then(m => m.EventCreateComponent)
+    loadComponent: () => import('./features/admin/events/event-create.component').then(m => m.EventCreateComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin/events/edit/:id',
-    loadComponent: () => import('./features/admin/events/event-edit.component').then(m => m.EventEditComponent)
+    loadComponent: () => import('./features/admin/events/event-edit.component').then(m => m.EventEditComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin/events/:id',
-    loadComponent: () => import('./features/admin/events/event-detail.component').then(m => m.EventDetailComponent)
+    loadComponent: () => import('./features/admin/events/event-detail.component').then(m => m.EventDetailComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin/events',
-    loadComponent: () => import('./features/admin/events/event-list.component').then(m => m.EventListComponent)
+    loadComponent: () => import('./features/admin/events/event-list.component').then(m => m.EventListComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin/categories',
-    loadComponent: () => import('./features/admin/categories/category-list.component').then(m => m.CategoryListComponent)
+    loadComponent: () => import('./features/admin/categories/category-list.component').then(m => m.CategoryListComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin/users',
-    loadComponent: () => import('./features/admin/users/user-list.component').then(m => m.UserListComponent)
+    loadComponent: () => import('./features/admin/users/user-list.component').then(m => m.UserListComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'admin',
-    loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+    loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+    canActivate: [roleGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'my-registrations',
-    loadComponent: () => import('./features/user/registrations/my-registrations.component').then(m => m.MyRegistrationsComponent)
+    loadComponent: () => import('./features/user/registrations/my-registrations.component').then(m => m.MyRegistrationsComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'events/:id',
-    loadComponent: () => import('./features/user/events/event-detail.component').then(m => m.EventDetailComponent)
+    loadComponent: () => import('./features/user/events/event-detail.component').then(m => m.EventDetailComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'events',
-    loadComponent: () => import('./features/user/events/event-browse.component').then(m => m.EventBrowseComponent)
+    loadComponent: () => import('./features/user/events/event-browse.component').then(m => m.EventBrowseComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'dashboard',
