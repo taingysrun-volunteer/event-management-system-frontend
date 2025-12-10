@@ -35,7 +35,7 @@ export class EventService {
   }
 
   searchEvents(searchTerm: string, categoryId?: string, page: number = 0, size: number = 10): Observable<EventListResponse> {
-    let params = `status=published&page=${page}&size=${size}`;
+    let params = `status=ACTIVE&page=${page}&size=${size}`;
     if (searchTerm) {
       params += `&search=${encodeURIComponent(searchTerm)}`;
     }
