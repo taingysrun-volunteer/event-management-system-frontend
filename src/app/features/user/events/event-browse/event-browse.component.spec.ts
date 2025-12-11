@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { EventBrowseComponent } from './event-browse.component';
-import { EventService } from '../../../core/services/event.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Event } from '../../../core/models/event.model';
-import { Category } from '../../../core/models/category.model';
+import { EventService } from '../../../../core/services/event.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Event } from '../../../../core/models/event.model';
+import { Category } from '../../../../core/models/category.model';
 
 describe('EventBrowseComponent', () => {
   let component: EventBrowseComponent;

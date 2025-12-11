@@ -1,13 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventService } from '../../../core/services/event.service';
-import { RegistrationService } from '../../../core/services/registration.service';
-import { Event } from '../../../core/models/event.model';
-import {AuthService} from '../../../core/services/auth.service';
-import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { SuccessDialogComponent } from '../../../shared/components/success-dialog/success-dialog.component';
-import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
+import { EventService } from '../../../../core/services/event.service';
+import { RegistrationService } from '../../../../core/services/registration.service';
+import { Event } from '../../../../core/models/event.model';
+import {AuthService} from '../../../../core/services/auth.service';
+import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { SuccessDialogComponent } from '../../../../shared/components/success-dialog/success-dialog.component';
+import { ToolbarComponent } from '../../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-event-detail',

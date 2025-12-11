@@ -2,12 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EventService } from '../../../core/services/event.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Event } from '../../../core/models/event.model';
-import { Category } from '../../../core/models/category.model';
-import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
+import { EventService } from '../../../../core/services/event.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Event } from '../../../../core/models/event.model';
+import { Category } from '../../../../core/models/category.model';
+import { ToolbarComponent } from '../../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-event-browse',

@@ -5,33 +5,37 @@ import { authGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent)
+    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/register.component').then(m => m.RegisterComponent)
+    loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'verify-otp',
+    loadComponent: () => import('./features/auth/verify-otp/verify-otp.component').then(m => m.VerifyOtpComponent)
   },
   {
     path: 'admin/events/create',
-    loadComponent: () => import('./features/admin/events/event-create.component').then(m => m.EventCreateComponent),
+    loadComponent: () => import('./features/admin/events/event-create/event-create.component').then(m => m.EventCreateComponent),
     canActivate: [roleGuard],
     data: { role: 'admin' }
   },
   {
     path: 'admin/events/edit/:id',
-    loadComponent: () => import('./features/admin/events/event-edit.component').then(m => m.EventEditComponent),
+    loadComponent: () => import('./features/admin/events/event-edit/event-edit.component').then(m => m.EventEditComponent),
     canActivate: [roleGuard],
     data: { role: 'admin' }
   },
   {
     path: 'admin/events/:id',
-    loadComponent: () => import('./features/admin/events/event-detail.component').then(m => m.EventDetailComponent),
+    loadComponent: () => import('./features/admin/events/event-detail/event-detail.component').then(m => m.EventDetailComponent),
     canActivate: [roleGuard],
     data: { role: 'admin' }
   },
   {
     path: 'admin/events',
-    loadComponent: () => import('./features/admin/events/event-list.component').then(m => m.EventListComponent),
+    loadComponent: () => import('./features/admin/events/event-list/event-list.component').then(m => m.EventListComponent),
     canActivate: [roleGuard],
     data: { role: 'admin' }
   },
@@ -49,7 +53,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+    loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
     canActivate: [roleGuard],
     data: { role: 'admin' }
   },
@@ -60,12 +64,12 @@ export const routes: Routes = [
   },
   {
     path: 'events/:id',
-    loadComponent: () => import('./features/user/events/event-detail.component').then(m => m.EventDetailComponent),
+    loadComponent: () => import('./features/user/events/event-detail/event-detail.component').then(m => m.EventDetailComponent),
     canActivate: [authGuard]
   },
   {
     path: 'events',
-    loadComponent: () => import('./features/user/events/event-browse.component').then(m => m.EventBrowseComponent),
+    loadComponent: () => import('./features/user/events/event-browse/event-browse.component').then(m => m.EventBrowseComponent),
     canActivate: [authGuard]
   },
   {

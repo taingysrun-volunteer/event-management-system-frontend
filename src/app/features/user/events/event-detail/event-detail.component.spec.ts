@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { EventDetailComponent } from './event-detail.component';
-import { EventService } from '../../../core/services/event.service';
-import { RegistrationService } from '../../../core/services/registration.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Event } from '../../../core/models/event.model';
+import { EventService } from '../../../../core/services/event.service';
+import { RegistrationService } from '../../../../core/services/registration.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Event } from '../../../../core/models/event.model';
 
 describe('EventDetailComponent (User)', () => {
   let component: EventDetailComponent;

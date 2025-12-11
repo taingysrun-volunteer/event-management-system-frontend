@@ -1,9 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { SummaryService } from '../../core/services/summary.service';
-import { ToolbarComponent } from '../../shared/components/toolbar/toolbar.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { SummaryService } from '../../../core/services/summary.service';
+import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-admin-dashboard',

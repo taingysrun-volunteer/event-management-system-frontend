@@ -2,10 +2,10 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { EventService } from '../../../core/services/event.service';
-import { Event } from '../../../core/models/event.model';
-import { AuthService } from '../../../core/services/auth.service';
-import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
+import { EventService } from '../../../../core/services/event.service';
+import { Event } from '../../../../core/models/event.model';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToolbarComponent } from '../../../../shared/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-event-list',

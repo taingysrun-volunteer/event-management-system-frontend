@@ -29,5 +29,15 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   message: string;
+  email: string;
   user?: User;
+}
+
+export interface VerifyOtpRequest {
+  email: string;
+  otpCode: string;
+}
+
+export interface ResendOtpRequest {
+  email: string;
 }

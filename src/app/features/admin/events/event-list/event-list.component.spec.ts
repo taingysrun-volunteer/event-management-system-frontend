@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError, EMPTY } from 'rxjs';
 import { EventListComponent } from './event-list.component';
-import { EventService } from '../../../core/services/event.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Event } from '../../../core/models/event.model';
+import { EventService } from '../../../../core/services/event.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Event } from '../../../../core/models/event.model';
 
 describe('EventListComponent', () => {
   let component: EventListComponent;

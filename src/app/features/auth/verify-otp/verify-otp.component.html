@@ -1,0 +1,74 @@
+<div class="verify-otp-container">
+  <div class="card-header">
+    <h2>Verify Your Email</h2>
+    <p class="subtitle">We've sent a 6-digit code to <strong>{{ email }}</strong></p>
+  </div>
+
+  <div class="verify-otp-card">
+
+    <div class="card-body">
+      <!-- Success Message -->
+      <div *ngIf="success" class="alert alert-success">
+        <i class="icon-success">✓</i>
+        {{ success }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-error">
+        <i class="icon-error">✕</i>
+        {{ error }}
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="otpCode">Enter Verification Code</label>
+          <input
+            type="text"
+            id="otpCode"
+            formControlName="otpCode"
+            class="otp-input"
+            placeholder="000000"
+            maxlength="6"
+            (input)="onOtpInput($event)"
+            [class.error]="otpCode?.invalid && otpCode?.touched"
+            autocomplete="off"
+          />
+          <div class="error-message" *ngIf="otpCode?.invalid && otpCode?.touched">
+            <small *ngIf="otpCode?.errors?.['required']">OTP code is required</small>
+            <small *ngIf="otpCode?.errors?.['pattern'] || otpCode?.errors?.['minlength'] || otpCode?.errors?.['maxlength']">
+              Please enter a valid 6-digit code
+            </small>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="loading || otpForm.invalid"
+        >
+          <span *ngIf="!loading">Verify Email</span>
+          <span *ngIf="loading" class="loading-spinner">Verifying...</span>
+        </button>
+      </form>
+
+      <div class="resend-section">
+        <p class="resend-text">Didn't receive the code?</p>
+        <button
+          type="button"
+          class="btn btn-link"
+          (click)="resendOtp()"
+          [disabled]="loading || resendCooldown > 0"
+        >
+          <span *ngIf="resendCooldown === 0">Resend Code</span>
+          <span *ngIf="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
+        </button>
+      </div>
+
+      <div class="back-to-login">
+        <p>
+          <a routerLink="/login" class="link">Back to Login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

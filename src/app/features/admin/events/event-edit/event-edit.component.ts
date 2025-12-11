@@ -2,13 +2,13 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { EventService } from '../../../core/services/event.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { CategoryService } from '../../../core/services/category.service';
-import {CreateEventRequest, Event, UpdateEventRequest} from '../../../core/models/event.model';
-import { Category } from '../../../core/models/category.model';
-import {ToolbarComponent} from '../../../shared/components/toolbar/toolbar.component';
-import {eventStatus} from '../../../shared/event-status';
+import { EventService } from '../../../../core/services/event.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import {CreateEventRequest, Event, UpdateEventRequest} from '../../../../core/models/event.model';
+import { Category } from '../../../../core/models/category.model';
+import {ToolbarComponent} from '../../../../shared/components/toolbar/toolbar.component';
+import {eventStatus} from '../../../../shared/event-status';
 
 @Component({
   selector: 'app-event-edit',

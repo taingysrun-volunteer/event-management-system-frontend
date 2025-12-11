@@ -4,7 +4,7 @@
  */
 export const environment = {
   production: false,
-  apiUrl: 'https://event-management-system-backend-j3iw.onrender.com/api',
+  apiUrl: 'http://localhost:8080/api',
   appName: 'Event Management System',
   version: '1.0.0',
   enableDebugTools: true,

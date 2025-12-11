@@ -3,8 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError, EMPTY } from 'rxjs';
 import { LoginComponent } from './login.component';
-import { AuthService } from '../../core/services/auth.service';
-import { USER_ROLES } from '../../shared/user-role';
+import { AuthService } from '../../../core/services/auth.service';
+import { USER_ROLES } from '../../../shared/user-role';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

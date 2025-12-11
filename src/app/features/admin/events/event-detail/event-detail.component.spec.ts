@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { EventDetailComponent } from './event-detail.component';
-import { EventService } from '../../../core/services/event.service';
-import { RegistrationService } from '../../../core/services/registration.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Event } from '../../../core/models/event.model';
-import { Registration, RegistrationStatus } from '../../../core/models/registration.model';
+import { EventService } from '../../../../core/services/event.service';
+import { RegistrationService } from '../../../../core/services/registration.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Event } from '../../../../core/models/event.model';
+import { Registration, RegistrationStatus } from '../../../../core/models/registration.model';
 
 describe('EventDetailComponent (Admin)', () => {
   let component: EventDetailComponent;

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -55,10 +55,10 @@ export class RegisterComponent {
       this.authService.register(registerData).subscribe({
         next: (response) => {
           this.isLoading.set(false);
-          this.successMessage.set('Registration successful! Redirecting to login...');
+          this.successMessage.set('Registration successful! Redirecting to email verification...');
           setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
+            this.router.navigate(['/verify-otp'], { queryParams: { email: response.email } });
+          }, 1500);
         },
         error: (error) => {
           this.isLoading.set(false);

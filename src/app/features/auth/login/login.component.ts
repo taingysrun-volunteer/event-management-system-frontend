@@ -2,8 +2,8 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { USER_ROLES } from '../../shared/user-role';
+import { AuthService } from '../../../core/services/auth.service';
+import { USER_ROLES } from '../../../shared/user-role';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +42,6 @@ export class LoginComponent {
         next: (response) => {
           this.isLoading.set(false);
 
-          // Redirect based on user role
           const userRole = response.user.role;
           if (userRole === USER_ROLES.ADMIN) {
             this.router.navigate(['/admin']);
@@ -52,7 +51,11 @@ export class LoginComponent {
         },
         error: (error) => {
           this.isLoading.set(false);
-          this.errorMessage.set('Invalid username or password');
+          if (error.error?.message && error.error.message.includes('verify your email')) {
+            this.errorMessage.set('Please verify your email before logging in. Check your email for the verification code.');
+          } else {
+            this.errorMessage.set('Invalid username or password');
+          }
           console.error('Login error:', error);
         }
       });

@@ -35,6 +35,21 @@ export class AuthService {
     return this.apiService.post<RegisterResponse>('/auth/register', userData);
   }
 
+  verifyOtp(email: string, otpCode: string): Observable<LoginResponse> {
+    return this.apiService.post<LoginResponse>('/auth/verify-otp', { email, otpCode }).pipe(
+      tap(response => {
+        this.setToken(response.token);
+        this.setUser(response.user);
+        this.currentUser.set(response.user);
+        this.isAuthenticated.set(true);
+      })
+    );
+  }
+
+  resendOtp(email: string): Observable<RegisterResponse> {
+    return this.apiService.post<RegisterResponse>('/auth/resend-otp', { email });
+  }
+
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);

@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError, BehaviorSubject } from 'rxjs';
 import { EventCreateComponent } from './event-create.component';
-import { EventService } from '../../../core/services/event.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Category } from '../../../core/models/category.model';
-import { Event as EventModel } from '../../../core/models/event.model';
+import { EventService } from '../../../../core/services/event.service';
+import { CategoryService } from '../../../../core/services/category.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Category } from '../../../../core/models/category.model';
+import { Event as EventModel } from '../../../../core/models/event.model';
 
 describe('EventCreateComponent', () => {
   let component: EventCreateComponent;
