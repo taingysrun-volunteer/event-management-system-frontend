@@ -122,21 +122,15 @@ test.describe('Registration Flow', () => {
   });
 
   test.describe('Mock API - Registration Success', () => {
-    test('should register successfully and redirect to login', async ({ page }) => {
-      // Mock the registration API
+    test('should register successfully and redirect to OTP verification', async ({ page }) => {
+      // Mock the registration API to return email for OTP verification
       await page.route('**/api/auth/register', async (route) => {
         await route.fulfill({
-          status: 201,
+          status: 200,
           contentType: 'application/json',
           body: JSON.stringify({
-            message: 'Registration successful',
-            user: {
-              id: '123',
-              username: 'newuser',
-              email: 'newuser@example.com',
-              firstName: 'New',
-              lastName: 'User'
-            }
+            message: 'Registration successful. Please check your email for the verification code.',
+            email: 'newuser@example.com'
           })
         });
       });
@@ -154,10 +148,10 @@ test.describe('Registration Flow', () => {
 
       // Should show success message
       await expect(page.locator('.success-message, [class*="success"], .alert-success'))
-        .toContainText(/successful/i, { timeout: 5000 });
+        .toContainText(/successful|verification/i, { timeout: 5000 });
 
-      // Should navigate to login page after delay
-      await expect(page).toHaveURL(/.*login/, { timeout: 5000 });
+      // Should navigate to OTP verification page after delay
+      await expect(page).toHaveURL(/.*verify-otp.*email=newuser@example.com/, { timeout: 5000 });
     });
 
     test('should register with valid email formats', async ({ page }) => {

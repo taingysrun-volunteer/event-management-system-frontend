@@ -418,6 +418,26 @@ describe('LoginComponent', () => {
       expect(component.errorMessage()).toBe('Invalid username or password');
       expect(component.isLoading()).toBe(false);
     });
+
+    it('should handle unverified email error', () => {
+      authService.login.and.returnValue(
+        throwError(() => ({
+          status: 401,
+          error: { message: 'Please verify your email before logging in. Check your email for the verification code.' }
+        }))
+      );
+
+      component.loginForm.patchValue({
+        username: 'unverifieduser',
+        password: 'password123'
+      });
+
+      component.onSubmit();
+
+      expect(component.errorMessage()).toBe('Please verify your email before logging in. Check your email for the verification code.');
+      expect(component.isLoading()).toBe(false);
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
   });
 
   describe('Edge Cases', () => {

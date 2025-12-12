@@ -157,7 +157,7 @@ test.describe('Registration Flow - Real API', () => {
   });
 
   test.describe('Real API - Registration Success', () => {
-    test('should register a new user successfully', async ({ page }) => {
+    test('should register a new user and redirect to OTP verification', async ({ page }) => {
       // Generate unique username and email to avoid conflicts
       const timestamp = Date.now();
       const uniqueUsername = `testuser_${timestamp}`;
@@ -177,21 +177,16 @@ test.describe('Registration Flow - Real API', () => {
       // Wait for success message or redirect
       await page.waitForTimeout(2000);
 
-      // Should either show success message or redirect to login
-      const isRedirectedToLogin = await page.url().includes('login');
-      const hasSuccessMessage = await page.locator('text=/success|registered|account created/i').isVisible().catch(() => false);
+      // Should show success message about email verification
+      const hasSuccessMessage = await page.locator('text=/success|verification|check.*email/i').isVisible().catch(() => false);
+      expect(hasSuccessMessage).toBeTruthy();
 
-      expect(isRedirectedToLogin || hasSuccessMessage).toBeTruthy();
+      // Should redirect to OTP verification page with email parameter
+      await expect(page).toHaveURL(new RegExp(`.*verify-otp.*email=${encodeURIComponent(uniqueEmail)}`), { timeout: 5000 });
 
-      // If redirected to login, verify we can login with new credentials
-      if (isRedirectedToLogin) {
-        await page.fill('input[formControlName="username"]', uniqueUsername);
-        await page.fill('input[formControlName="password"]', testConfig.testRegistration.password);
-        await page.click('button[type="submit"]');
-
-        // Should successfully login
-        await expect(page).toHaveURL(/.*\/(admin|user)/, { timeout: 10000 });
-      }
+      // Verify OTP page elements are visible
+      await expect(page.locator('h2, h1').filter({ hasText: /verify.*email/i })).toBeVisible();
+      await expect(page.locator('input[formControlName="otpCode"]')).toBeVisible();
     });
 
     test('should handle special characters in names', async ({ page }) => {
@@ -210,9 +205,9 @@ test.describe('Registration Flow - Real API', () => {
 
       await page.waitForTimeout(2000);
 
-      // Should succeed or redirect to login
-      const isSuccessful = await page.url().includes('login') ||
-                          await page.locator('text=/success|registered/i').isVisible().catch(() => false);
+      // Should succeed and redirect to OTP verification
+      const isSuccessful = await page.url().includes('verify-otp') ||
+                          await page.locator('text=/success|verification/i').isVisible().catch(() => false);
       expect(isSuccessful).toBeTruthy();
     });
   });

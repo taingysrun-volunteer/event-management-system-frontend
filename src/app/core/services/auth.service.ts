@@ -50,6 +50,18 @@ export class AuthService {
     return this.apiService.post<RegisterResponse>('/auth/resend-otp', { email });
   }
 
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.apiService.post<{ message: string }>('/auth/forgot-password', { email });
+  }
+
+  resetPassword(email: string, otpCode: string, newPassword: string): Observable<{ message: string }> {
+    return this.apiService.post<{ message: string }>('/auth/reset-password', {
+      email,
+      otpCode,
+      newPassword
+    });
+  }
+
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);

@@ -377,7 +377,7 @@ describe('RegisterComponent', () => {
     };
 
     it('should call authService.register with form values excluding confirmPassword', () => {
-      const mockResponse = { message: 'Registration successful', user: { id: '1', username: 'testuser', email: 'test@example.com', firstName: 'John', lastName: 'Doe' } };
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.registerForm.patchValue(validFormData);
@@ -393,7 +393,7 @@ describe('RegisterComponent', () => {
     });
 
     it('should set loading to true when submitting', () => {
-      const mockResponse = { message: 'Registration successful' };
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.registerForm.patchValue(validFormData);
@@ -404,7 +404,7 @@ describe('RegisterComponent', () => {
     });
 
     it('should clear error and success messages when submitting', () => {
-      const mockResponse = { message: 'Registration successful' };
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.errorMessage.set('Previous error');
@@ -417,18 +417,18 @@ describe('RegisterComponent', () => {
     });
 
     it('should set success message after successful registration', () => {
-      const mockResponse = { message: 'Registration successful' };
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.registerForm.patchValue(validFormData);
       component.onSubmit();
 
-      expect(component.successMessage()).toBe('Registration successful! Redirecting to login...');
+      expect(component.successMessage()).toBe('Registration successful! Redirecting to email verification...');
       expect(component.isLoading()).toBe(false);
     });
 
-    it('should navigate to /login after 2 seconds on success', fakeAsync(() => {
-      const mockResponse = { message: 'Registration successful' };
+    it('should navigate to /verify-otp after 1.5 seconds on success', fakeAsync(() => {
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.registerForm.patchValue(validFormData);
@@ -436,13 +436,13 @@ describe('RegisterComponent', () => {
 
       expect(router.navigate).not.toHaveBeenCalled();
 
-      tick(2000);
+      tick(1500);
 
-      expect(router.navigate).toHaveBeenCalledWith(['/login']);
+      expect(router.navigate).toHaveBeenCalledWith(['/verify-otp'], { queryParams: { email: 'test@example.com' } });
     }));
 
     it('should not navigate immediately on success', () => {
-      const mockResponse = { message: 'Registration successful' };
+      const mockResponse = { message: 'Registration successful', email: 'test@example.com' };
       authService.register.and.returnValue(of(mockResponse));
 
       component.registerForm.patchValue(validFormData);
@@ -656,13 +656,7 @@ describe('RegisterComponent', () => {
     it('should perform complete registration flow successfully', fakeAsync(() => {
       const mockResponse = {
         message: 'Registration successful',
-        user: {
-          id: '1',
-          username: 'newuser',
-          email: 'newuser@test.com',
-          firstName: 'New',
-          lastName: 'User'
-        }
+        email: 'newuser@test.com'
       };
       authService.register.and.returnValue(of(mockResponse));
 
@@ -698,13 +692,13 @@ describe('RegisterComponent', () => {
       // Verify success state
       expect(component.isLoading()).toBe(false);
       expect(component.errorMessage()).toBeNull();
-      expect(component.successMessage()).toBe('Registration successful! Redirecting to login...');
+      expect(component.successMessage()).toBe('Registration successful! Redirecting to email verification...');
 
       // Fast-forward time
-      tick(2000);
+      tick(1500);
 
-      // Verify navigation
-      expect(router.navigate).toHaveBeenCalledWith(['/login']);
+      // Verify navigation to OTP verification page
+      expect(router.navigate).toHaveBeenCalledWith(['/verify-otp'], { queryParams: { email: 'newuser@test.com' } });
     }));
 
     it('should handle complete registration flow with error', () => {

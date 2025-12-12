@@ -16,6 +16,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/verify-otp/verify-otp.component').then(m => m.VerifyOtpComponent)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./features/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
+  {
     path: 'admin/events/create',
     loadComponent: () => import('./features/admin/events/event-create/event-create.component').then(m => m.EventCreateComponent),
     canActivate: [roleGuard],
